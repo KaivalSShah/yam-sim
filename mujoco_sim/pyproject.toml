@@ -1,0 +1,10 @@
+[project]
+name = "mujoco-sim"
+version = "0.1.0"
+description = "Minimal MuJoCo simulation of the I2RT YAM arm with linear_4310 gripper and wrist camera"
+requires-python = ">=3.10"
+dependencies = [
+    "mujoco>=3.2",
+    "numpy",
+    "pillow",
+]
