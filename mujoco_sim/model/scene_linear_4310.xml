@@ -1,6 +1,9 @@
 <mujoco model="yam_linear_4310 scene">
   <include file="yam_linear_4310.xml"/>
 
+  <!-- noslip reduces slow sliding ("creep") of grasped objects in soft contacts. -->
+  <option noslip_iterations="3"/>
+
   <visual>
     <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
     <rgba haze="0.15 0.25 0.35 1"/>
@@ -17,6 +20,36 @@
 
   <worldbody>
     <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+
+    <!-- Fixed overhead camera looking straight down at the workspace. The image's
+      "up" direction is world +x (the direction the arm reaches), its right is world -y.
+      Cycle to it in the viewer with the ] key, or render it offscreen (see cameras.py). -->
+    <camera name="overhead_cam" pos="0.3 0 1.6" xyaxes="0 -1 0  1 0 0" fovy="60"/>
     <geom name="floor" pos="0 0 -0.01" size="0 0 0.05" type="plane" material="groundplane" contype="1"/>
+
+    <!-- Ping-pong paddle. Free body; placed into the gripper from Python at reset.
+      Local +z runs up the handle. The handle's wide faces point along local y, and the
+      blade disc's axis is also local y, so the blade lies in the handle's plane. -->
+    <body name="paddle" pos="0.4 0 0.2">
+      <freejoint name="paddle_free"/>
+      <geom name="handle" type="box" size="0.0125 0.006 0.05" mass="0.06"
+        friction="1.5 0.02 0.001" condim="6" rgba="0.6 0.4 0.2 1"/>
+      <geom name="blade" type="cylinder" pos="0 0 0.125" zaxis="0 1 0" size="0.075 0.003" mass="0.09"
+        friction="1.0" rgba="0.8 0.1 0.1 1"/>
+    </body>
+
+    <!-- Ping-pong ball. pos is where it starts; it is dropped from rest.
+      priority=1 makes the ball's contact settings win over the floor's, and the low
+      damping ratio in solref (0.1) is what makes it bounce. -->
+    <body name="ball" pos="0.532 0 0.8">
+      <freejoint name="ball_free"/>
+      <geom name="ball" type="sphere" size="0.02" mass="0.0027" rgba="1 0.5 0 1"
+        priority="1" solref="0.02 0.1"/>
+    </body>
   </worldbody>
+
+  <equality>
+    <!-- Optional "glue" between wrist and paddle. Off by default; flip data.eq_active from Python. -->
+    <weld name="hold" body1="link_6" body2="paddle" active="false"/>
+  </equality>
 </mujoco>

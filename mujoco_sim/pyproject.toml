@@ -7,4 +7,6 @@ dependencies = [
     "mujoco>=3.2",
     "numpy",
     "pillow",
+    "imageio",
+    "imageio-ffmpeg",
 ]

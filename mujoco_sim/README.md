@@ -19,6 +19,8 @@ uv pip install -e .
 
 ```bash
 # Interactive viewer. On macOS you must use mjpython instead of python.
+# Every run records the overhead camera to recordings/<timestamp>/overhead_cam.mp4
+# (written when you close the window).
 mjpython sim.py
 
 # Render one frame from the wrist camera to wrist_camera.png
@@ -32,8 +34,11 @@ python wrist_camera.py
 | `model/scene_linear_4310.xml` | Scene: floor, skybox, lights. Includes the robot file below. |
 | `model/yam_linear_4310.xml` | The robot: links, joints, geoms, gripper, camera, actuators, home keyframe. |
 | `model/assets/` | STL meshes. |
-| `sim.py` | Loads the scene, resets to the home pose, steps physics, shows the viewer. |
+| `sim.py` | Loads the scene, initializes the environment, steps physics, shows the viewer, records the overhead camera. |
+| `recordings/` | One timestamped folder per run with its `overhead_cam.mp4`. |
 | `wrist_camera.py` | Offscreen render from the `wrist_cam` camera. |
+| `initialize_environment.py` | Resets to home and places the paddle in the gripper (`with_paddle=False` parks it). |
+| `cameras.py` | `CameraFeed`: renders any model camera (`overhead_cam`, `wrist_cam`) to a numpy RGB array. `VideoRecorder`: writes a camera to MP4 during a run. |
 
 ## Things to try
 
@@ -41,8 +46,8 @@ python wrist_camera.py
   and drag the **Control** sliders (`Tab` shows the left panel).
   Each slider is one `<position>` actuator in `yam_linear_4310.xml`. The last one
   (`gripper`) opens and closes the fingers.
-- Switch the viewer camera to the wrist camera: right panel, **Rendering** > **Camera**,
-  or press `[` / `]` to cycle cameras.
+- Switch the viewer camera to the overhead or wrist camera: right panel, **Rendering** > **Camera**,
+  or press `[` / `]` to cycle cameras. The overhead camera is a fixed `<camera>` in the scene file.
 - Press `Ctrl+Backspace` to reset to the home keyframe. Press `Space` to pause.
 - Set `data.ctrl[:]` in `sim.py` to command joint targets from code, e.g.
   `data.ctrl[0] = 1.0` to turn joint1. Indices match the `<actuator>` order.

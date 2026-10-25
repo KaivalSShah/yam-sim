@@ -28,7 +28,9 @@
           <geom type="box" rgba="0.381493 0.492734 0.780446 1"/>
         </default>
         <default class="finger_collision">
-          <geom type="box" condim="6" friction="1 5e-3 5e-4" solref=".01 1" priority="1"
+          <!-- Torsional friction raised from 5e-3 so a grasped object (e.g. a paddle)
+            does not slowly pivot about the squeeze axis under its own weight. -->
+          <geom type="box" condim="6" friction="1 0.05 5e-4" solref=".01 1" priority="1"
             rgba="0.381493 0.492734 0.780446 1"/>
         </default>
       </default>
