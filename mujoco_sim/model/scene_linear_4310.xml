@@ -31,6 +31,7 @@
       Local +z runs up the handle. The handle's wide faces point along local y, and the
       blade disc's axis is also local y, so the blade lies in the handle's plane. -->
     <body name="paddle" pos="0.4 0 0.2">
+      <gravcomp type="1" active="false"/>
       <freejoint name="paddle_free"/>
       <geom name="handle" type="box" size="0.0125 0.006 0.05" mass="0.06"
         friction="1.5 0.02 0.001" condim="6" rgba="0.6 0.4 0.2 1"/>
