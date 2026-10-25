@@ -1,7 +1,7 @@
 # mujoco_sim
 
 A bare-bones MuJoCo simulation of one I2RT YAM arm with the `linear_4310` gripper
-and the wrist-mounted Intel RealSense D405 camera.
+and the wrist-mounted Intel RealSense D405 camera, holding a ping-pong paddle.
 
 The robot model in `model/` is the `i2rt_yam` model from
 [MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie/tree/main/i2rt_yam)
@@ -22,9 +22,6 @@ uv pip install -e .
 # Every run records the overhead camera to recordings/<timestamp>/overhead_cam.mp4
 # (written when you close the window).
 mjpython sim.py
-
-# Render one frame from the wrist camera to wrist_camera.png
-python wrist_camera.py
 ```
 
 ## Files
@@ -36,7 +33,6 @@ python wrist_camera.py
 | `model/assets/` | STL meshes. |
 | `sim.py` | Loads the scene, initializes the environment, steps physics, shows the viewer, records the overhead camera. |
 | `recordings/` | One timestamped folder per run with its `overhead_cam.mp4`. |
-| `wrist_camera.py` | Offscreen render from the `wrist_cam` camera. |
 | `initialize_environment.py` | Resets to home and places the paddle in the gripper (`with_paddle=False` parks it). |
 | `cameras.py` | `CameraFeed`: renders any model camera (`overhead_cam`, `wrist_cam`) to a numpy RGB array. `VideoRecorder`: writes a camera to MP4 during a run. |
 

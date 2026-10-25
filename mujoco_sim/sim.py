@@ -13,7 +13,7 @@ MODEL = Path(__file__).parent / "model" / "scene_linear_4310.xml"
 model = mujoco.MjModel.from_xml_path(str(MODEL))
 data = mujoco.MjData(model)
 
-initialize_scene(model, data, with_paddle=False)
+initialize_scene(model, data, with_paddle=True)
 recorders = initialize_camera(model, Path(__file__).parent / "recordings")
 
 try:
@@ -24,7 +24,7 @@ try:
 
             ball_pos = data.body("ball").xpos
             ball_vel = data.joint("ball_free").qvel[:3]
-            
+
             if step % 100 == 0:
                 print(f"t={data.time:.2f}  ball pos={ball_pos}  vel={ball_vel}")
             step += 1
