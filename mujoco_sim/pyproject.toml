@@ -9,4 +9,6 @@ dependencies = [
     "pillow",
     "imageio",
     "imageio-ffmpeg",
+    "gymnasium",
+    "stable-baselines3",
 ]
