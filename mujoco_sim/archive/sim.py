@@ -7,6 +7,7 @@ import mujoco
 import mujoco.viewer
 
 from initialize_environment import initialize_camera, initialize_scene
+from utils import detect_ball_contact
 
 MODEL = Path(__file__).parent / "model" / "scene_linear_4310.xml"
 
@@ -18,16 +19,17 @@ recorders = initialize_camera(model, Path(__file__).parent / "recordings")
 
 try:
     with mujoco.viewer.launch_passive(model, data, show_left_ui=False, show_right_ui=False) as viewer:
-        step = 0
+        was_on_paddle = was_on_floor = False
         while viewer.is_running():
             step_start = time.time()
 
-            ball_pos = data.body("ball").xpos
-            ball_vel = data.joint("ball_free").qvel[:3]
-
-            if step % 100 == 0:
-                print(f"t={data.time:.2f}  ball pos={ball_pos}  vel={ball_vel}")
-            step += 1
+            # Print only when a contact starts, not on every step it persists.
+            on_paddle, on_floor = detect_ball_contact(model, data)
+            if on_paddle and not was_on_paddle:
+                print(f"t={data.time:.2f}  ball hit the paddle")
+            if on_floor and not was_on_floor:
+                print(f"t={data.time:.2f}  ball hit the floor")
+            was_on_paddle, was_on_floor = on_paddle, on_floor
 
             mujoco.mj_step(model, data)
             for recorder in recorders:
